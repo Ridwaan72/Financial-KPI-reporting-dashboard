@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="finance_kpi.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="707"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="budget" custom_title="0" dock_id="1" table="4,6:mainbudget"/><dock_state state="000000ff00000000fd000000010000000200000374000001aefc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000003740000010100ffffff0000027e0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="actuals" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="5" mode="1"/></sort><column_widths><column index="1" value="50"/><column index="2" value="50"/><column index="3" value="60"/><column index="4" value="60"/><column index="5" value="40"/><column index="6" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="budget" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="50"/><column index="2" value="50"/><column index="3" value="60"/><column index="4" value="114"/><column index="5" value="93"/><column index="6" value="94"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT
+    a.month,
+    SUM(a.revenue) AS actual_revenue,
+    SUM(b.budget_revenue) AS budget_revenue,
+    SUM(a.revenue) - SUM(b.budget_revenue) AS revenue_variance,
+    ROUND(100.0 * (SUM(a.revenue) - SUM(b.budget_revenue)) / SUM(b.budget_revenue), 2) AS variance_pct,
+    SUM(a.revenue - a.cogs - a.opex) AS operating_profit
+FROM actuals a
+JOIN budget b
+    ON a.month = b.month
+    AND a.region = b.region
+    AND a.product = b.product
+GROUP BY a.month
+ORDER BY a.month;
+
+SELECT month, COUNT(*) AS rows_in_actuals
+FROM actuals
+GROUP BY month;
+
+SELECT month, COUNT(*) AS rows_in_budget
+FROM budget
+GROUP BY month;
+
+SELECT DISTINCT month, region, product FROM actuals;
+
+SELECT DISTINCT month, region, product FROM budget;
+
+SELECT month, COUNT(*) FROM budget GROUP BY month;
+
+SELECT
+    a.month,
+    SUM(a.revenue) AS actual_revenue,
+    SUM(b.budget_revenue) AS budget_revenue,
+    SUM(a.revenue) - SUM(b.budget_revenue) AS revenue_variance,
+    ROUND(100.0 * (SUM(a.revenue) - SUM(b.budget_revenue)) / SUM(b.budget_revenue), 2) AS variance_pct,
+    SUM(a.revenue - a.cogs - a.opex) AS operating_profit
+FROM actuals a
+JOIN budget b
+    ON a.month = b.month
+    AND a.region = b.region
+    AND a.product = b.product
+GROUP BY a.month
+ORDER BY a.month;
+
+SELECT DISTINCT month FROM actuals;
+
+SELECT DISTINCT month FROM budget;
+
+SELECT DISTINCT month, region, product
+FROM actuals
+ORDER BY month, region, product;
+
+SELECT DISTINCT month, region, product
+FROM budget
+ORDER BY month, region, product;
+
+SELECT
+    a.month,
+    SUM(a.revenue) AS actual_revenue,
+    SUM(b.budget_revenue) AS budget_revenue,
+    SUM(a.revenue) - SUM(b.budget_revenue) AS revenue_variance,
+    ROUND(100.0 * (SUM(a.revenue) - SUM(b.budget_revenue)) / SUM(b.budget_revenue), 2) AS variance_pct,
+    SUM(a.revenue - a.cogs - a.opex) AS operating_profit
+FROM actuals a
+JOIN budget b
+    ON a.month = b.month
+GROUP BY a.month
+ORDER BY a.month;</sql><current_tab id="0"/></tab_sql></sqlb_project>
